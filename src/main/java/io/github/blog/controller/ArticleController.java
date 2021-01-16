@@ -1,28 +1,27 @@
 package io.github.blog.controller;
 
 import java.util.*;
-import java.util.stream.*;
 
 import org.modelmapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
 
 import io.github.blog.dto.ArticleDTO;
 import io.github.blog.entity.Article;
 import io.github.blog.repository.ArticleRepository;
-import io.github.blog.util.Iterables;
 
 @Controller
-public class IndexController {
+@RequestMapping("/articles")
+public class ArticleController {
     
     @Autowired
     private ArticleRepository articleRepository;
 
     private ModelMapper modelMapper;
 
-    public IndexController() {
+    public ArticleController() {
         modelMapper = new ModelMapper();
         configureModelMapper();
     }
@@ -39,13 +38,11 @@ public class IndexController {
         typeMap.addMappings(mapper -> mapper.using(toBase64).map(Article::getCoverPicture , ArticleDTO::setCoverPicture));
 	}
 
-	@GetMapping("/")
-    public String index(Model model) {
-        var articles = Iterables.stream(articleRepository.findAll())
-            .map(article -> modelMapper.map(article, ArticleDTO.class))
-            .collect(Collectors.toList());
+    @GetMapping("/{id}")
+    public String getArticle(@PathVariable long id, Model model) {
+        var article = modelMapper.map(articleRepository.findById(id).orElseThrow(), ArticleDTO.class);
+        model.addAttribute("article", article);
 
-        model.addAttribute("articles", articles);
-        return "index";
+        return "articles/article";
     }
 }

@@ -1,0 +1,25 @@
+<head>
+    <th:block th:fragment="meta">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+    </th:block>
+
+    <th:block th:fragment="link">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+
+        <link rel="stylesheet" th:href="@{/webjars/mdbootstrap/css/bootstrap.min.css}">
+        <link rel="stylesheet" th:href="@{/webjars/mdbootstrap/css/mdb.min.css}">
+
+        <link rel="stylesheet" th:href="@{/webjars/font-awesome/css/fontawesome.min.css}">
+        <link rel="stylesheet" th:href="@{/webjars/font-awesome/css/solid.min.css}">
+
+        <link rel="stylesheet" th:href="@{css/common.css}">
+    </th:block>
+
+    <th:block th:fragment="script">
+        <script th:src="@{/webjars/mdbootstrap/js/jquery.min.js}"></script>
+        <script th:src="@{/webjars/mdbootstrap/js/bootstrap.min.js}"></script>
+        <script th:src="@{/webjars/mdbootstrap/js/mdb.min.js}"></script>
+        <script th:src="@{js/common.js}"></script>
+    </th:block>
+</head>
