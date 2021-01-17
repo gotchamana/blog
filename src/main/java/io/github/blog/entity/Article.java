@@ -4,10 +4,12 @@ import java.time.LocalDate;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.*;
+
 import lombok.Data;
 
 @Data
-@Entity
+@javax.persistence.Entity
 public class Article {
     
     @Id
@@ -29,8 +31,10 @@ public class Article {
     private byte[] coverPicture;
 
     @Column(nullable = false)
+    @CreationTimestamp
     private LocalDate createDate;
 
     @Column(nullable = false)
+    @UpdateTimestamp
     private LocalDate updateDate;
 }

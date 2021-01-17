@@ -3,29 +3,38 @@
 <html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
     <head>
         <th:block th:insert="common-head :: meta"></th:block>
-        <th:block th:insert="common-head :: link"></th:block>
-        <th:block th:insert="common-head :: script"></th:block>
 
-        <title>Article</title>
+        <th:block th:insert="common-head :: link"></th:block>
+        <link rel="stylesheet" th:href="@{/webjars/highlight.js/styles/stackoverflow-light.css}">
+        <link rel="stylesheet" th:href="@{/css/articles/article.css}">
+
+        <th:block th:insert="common-head :: script"></th:block>
+        <script th:src="@{/webjars/highlight.js/highlight.pack.js}"></script>
+        <script th:src="@{/js/articles/article.js}"></script>
+
+        <title th:text="${article.title}"></title>
     </head>
 
     <body>
         <div th:replace="navbar"></div>
 
         <div class="container-fluid pb-3">
-            <div class="row mb-5" th:object="${article}">
+            <div class="row" th:object="${article}">
                 <div class="offset-md-2 col-md-8 offset-1 col-10">
                     <div class="card">
-                        <div class="card-body">
-                            <h3 class="card-title" th:text="*{title}"></h3>
-                            <hr>
-                            <p class="card-text" th:text="*{content}"></p>
-                            <div class="d-flex justify-content-end">
-                                <a class="h6" th:href="|@{/articles}/*{id}|">
-                                    Read more
-                                    <i class="fas fa-angle-double-right"></i>
-                                </a>
-                            </div>
+                        <img class="card-img-top" alt="Cover image" th:src="|data:image/*;base64,*{coverPicture}|"
+                            th:if="*{coverPicture} != null">
+
+                        <div class="card-body p-5">
+                            <h1 class="card-title font-weight-bold text-capitalize" th:text="*{title}"></h1>
+                            <h5 class="text-muted" style="text-overflow: ellipsis; overflow: hidden;">
+                                <span class="article-metadata" th:text="|#{article.author}：*{author}|"></span>
+                                <span class="article-metadata" th:text="|#{article.create-date}：*{createDate}|"></span>
+                                <span class="article-metadata" th:if="not *{createDate.equals(updateDate)}"
+                                    th:text="|#{article.update-date}：*{updateDate}|"></span>
+                            </h5>
+                            <hr class="mt-4 mb-4">
+                            <p class="article-text" th:utext="*{content}"></p>
                         </div>
                     </div>
                 </div>

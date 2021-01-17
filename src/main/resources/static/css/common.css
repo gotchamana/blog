@@ -1,3 +1,7 @@
+body {
+    font-family: "Roboto", "Noto Sans TC", sans-serif
+}
+
 .hamburger-icon {
     width: 30px;
     height: 20px;
@@ -81,4 +85,82 @@
     transform: rotate(-45deg);
     top: 21px;
     left: 8px;
+}
+
+.article-metadata {
+    margin-right: 1rem;
+    white-space: nowrap;
+}
+
+.article-text {
+    font-size: 1.15rem
+}
+
+.card .card-body .card-text {
+    font-size: 1rem
+}
+
+.fixed-action-btn {
+    position: fixed;
+    right: 35px;
+    bottom: 35px;
+    z-index: 998;
+    margin-bottom: 0;
+    overflow: hidden;
+    height: 110px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: end;
+    -ms-flex-align: end;
+    align-items: flex-end;
+    padding: 15px 15px 15px 15px;
+    padding-right: 15px;
+    padding-bottom: 15px;
+    padding-left: 15px;
+    padding-bottom: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+    -webkit-transition: height 400ms;
+    transition: height 400ms;
+}
+
+.btn-floating {
+    position: relative;
+    z-index: 1;
+    display: inline-block;
+    padding: 0;
+    margin: 10px;
+    overflow: hidden;
+    vertical-align: middle;
+    cursor: pointer;
+    border-radius: 50%;
+    -webkit-box-shadow: 0 5px 11px 0 rgba(0,0,0,0.18),0 4px 15px 0 rgba(0,0,0,0.15);
+    box-shadow: 0 5px 11px 0 rgba(0,0,0,0.18),0 4px 15px 0 rgba(0,0,0,0.15);
+    -webkit-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+    width: 47px;
+    height: 47px;
+}
+
+.btn-floating.btn-lg i {
+    font-size: 1.625rem;
+    line-height: 61.1px;
+}
+
+.btn-floating i {
+    display: inline-block;
+    width: inherit;
+    color: #fff;
+    text-align: center;
+}
+
+.btn-floating i {
+    font-size: 1.25rem;
+    line-height: 47px;
+}
+
+.btn-floating.btn-lg {
+    width: 61.1px;
+    height: 61.1px;
 }

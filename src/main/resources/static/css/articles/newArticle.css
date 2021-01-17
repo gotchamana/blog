@@ -1,0 +1,12 @@
+.editor-statusbar {
+    display: flex;
+}
+
+.editor-statusbar .upload-image {
+    margin-left: auto;
+}
+
+.editor-statusbar .content-error {
+    color: #dc3545;
+    margin-left: 0;
+}

@@ -6,7 +6,7 @@
         <th:block th:insert="common-head :: link"></th:block>
         <th:block th:insert="common-head :: script"></th:block>
 
-        <title>Home</title>
+        <title th:text="#{home.title}"></title>
     </head>
 
     <body>
@@ -25,12 +25,18 @@
                         </div>
 
                         <div class="card-body">
-                            <h3 class="card-title" th:text="*{title}"></h3>
+                            <h3 class="card-title text-capitalize" th:text="*{title}"></h3>
+                            <h6 class="text-muted" style="text-overflow: ellipsis; overflow: hidden;">
+                                <span class="article-metadata" th:text="|#{article.author}：*{author}|"></span>
+                                <span class="article-metadata" th:text="|#{article.create-date}：*{createDate}|"></span>
+                                <span class="article-metadata" th:if="not *{createDate.equals(updateDate)}"
+                                    th:text="|#{article.update-date}：*{updateDate}|"></span>
+                            </h6>
                             <hr>
-                            <p class="card-text" th:text="*{content}"></p>
+                            <p class="card-text" th:text="*{#strings.abbreviate(content, 300)}"></p>
                             <div class="d-flex justify-content-end">
                                 <a class="h6" th:href="|@{/articles}/*{id}|">
-                                    Read more
+                                    [[#{home.article.read-more}]]
                                     <i class="fas fa-angle-double-right"></i>
                                 </a>
                             </div>
@@ -38,6 +44,17 @@
                     </div>
                 </div>
             </div>
+
+            <nav>
+                <ul class="pagination pg-teal justify-content-center" sd:pagination-split="5" sd:pagination="full"></ul>
+            </nav>
+
+            <div class="fixed-action-btn" style="bottom: 24px; right: 24px;">
+                <a class="btn-floating btn-lg red" th:href="@{/articles/new}">
+                    <i class="fas fa-pen"></i>
+                </a>
+            </div>
         </div>
+
     </body>
 </html>

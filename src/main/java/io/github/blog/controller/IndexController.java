@@ -1,18 +1,19 @@
 package io.github.blog.controller;
 
-import java.util.*;
-import java.util.stream.*;
-
-import org.modelmapper.*;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.text.TextContentRenderer;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import io.github.blog.dto.ArticleDTO;
-import io.github.blog.entity.Article;
+import io.github.blog.module.ArticleModule;
 import io.github.blog.repository.ArticleRepository;
-import io.github.blog.util.Iterables;
 
 @Controller
 public class IndexController {
@@ -30,20 +31,15 @@ public class IndexController {
     private void configureModelMapper() {
         modelMapper.getConfiguration().setSkipNullEnabled(true);
 
-        Converter<byte[], String> toBase64 = context ->
-            Optional.ofNullable(context.getSource())
-                .map(cover -> Base64.getEncoder().encodeToString(cover))
-                .orElse(null);
-
-        var typeMap = modelMapper.createTypeMap(Article.class, ArticleDTO.class);
-        typeMap.addMappings(mapper -> mapper.using(toBase64).map(Article::getCoverPicture , ArticleDTO::setCoverPicture));
+        var parser = Parser.builder().build();
+        var renderer = TextContentRenderer.builder().build();
+        modelMapper.registerModule(new ArticleModule(parser, renderer));
 	}
 
 	@GetMapping("/")
-    public String index(Model model) {
-        var articles = Iterables.stream(articleRepository.findAll())
-            .map(article -> modelMapper.map(article, ArticleDTO.class))
-            .collect(Collectors.toList());
+    public String index(Model model, @PageableDefault(sort = "createDate", direction=Direction.DESC) Pageable pageable) {
+        var articles = articleRepository.findAll(pageable)
+            .map(article -> modelMapper.map(article, ArticleDTO.class));
 
         model.addAttribute("articles", articles);
         return "index";
