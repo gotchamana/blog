@@ -38,5 +38,6 @@ function enableEasyMDE() {
 }
 
 function copyTextareaValidationError() {
-    document.querySelector(".content-error").textContent = document.getElementById("contentError").textContent;
+    let errorContainer = document.getElementById("contentError");
+    document.querySelector(".content-error").textContent = errorContainer ? errorContainer.textContent : "";
 }
