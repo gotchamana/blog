@@ -1,6 +1,21 @@
 document.addEventListener("DOMContentLoaded", () => {
     enableEasyMDE();
     copyTextareaValidationError();
+
+    document.getElementById("coverPictureBinary").onchange = function () {
+        if (this.files && this.files[0]) {
+            document.getElementById("selectedPictureName").value = this.files[0].name;
+            let reader = new FileReader();
+            // reader.onload = () => document.getElementById("coverPicture").value = reader.result;
+            reader.onload = () => console.log(reader.result);
+            reader.onerror = console.log;
+            reader.readAsDataURL(this.files[0]);
+        } else {
+            document.getElementById("selectedPictureName").value = "";
+            document.getElementById("coverPicture").value = "";
+        }
+    };
+
 });
 
 function enableEasyMDE() {
@@ -40,4 +55,11 @@ function enableEasyMDE() {
 function copyTextareaValidationError() {
     let errorContainer = document.getElementById("contentError");
     document.querySelector(".content-error").textContent = errorContainer ? errorContainer.textContent : "";
+}
+
+function clearSelectedPicture() {
+    document.getElementById("coverPictureBinary").value = "";
+    document.getElementById("coverPicture").value = "";
+    document.getElementById("selectedPictureName").value = "";
+    this.blur();
 }

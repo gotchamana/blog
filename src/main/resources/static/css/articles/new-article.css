@@ -10,3 +10,11 @@
     color: #dc3545;
     margin-left: 0;
 }
+
+button.close {
+    outline: none;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}

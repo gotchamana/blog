@@ -5,7 +5,6 @@ import static org.springframework.web.servlet.mvc.method.annotation.MvcUriCompon
 import java.io.IOException;
 import java.util.*;
 
-import javax.servlet.http.*;
 import javax.validation.Valid;
 
 import org.commonmark.ext.gfm.tables.TablesExtension;
@@ -19,22 +18,22 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
-import org.springframework.web.servlet.*;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
 import io.github.blog.dto.*;
-import io.github.blog.entity.Image;
+import io.github.blog.entity.*;
 import io.github.blog.module.ArticleModule;
-import io.github.blog.repository.*;
+import io.github.blog.repository.ImageRepository;
+import io.github.blog.service.ArticleService;
 import lombok.extern.log4j.Log4j2;
 
 @Controller
 @RequestMapping("/articles")
 @Log4j2
-public class ArticleController implements HandlerExceptionResolver {
+public class ArticleController {
     
     @Autowired
-    private ArticleRepository articleRepository;
+    private ArticleService articleService;
 
     @Autowired
     private ImageRepository imageRepository;
@@ -57,7 +56,7 @@ public class ArticleController implements HandlerExceptionResolver {
 
     @GetMapping("/{id}")
     public String getArticle(@PathVariable long id, Model model) {
-        var article = modelMapper.map(articleRepository.findById(id).orElseThrow(), ArticleDTO.class);
+        var article = modelMapper.map(articleService.findById(id).orElseThrow(), ArticleDTO.class);
         model.addAttribute("article", article);
 
         return "articles/article";
@@ -65,13 +64,19 @@ public class ArticleController implements HandlerExceptionResolver {
 
     @GetMapping("/new")
     public String createNewArticleForm(@ModelAttribute(binding = false) ArticleDTO articleDTO) {
+        articleDTO.setAuthor("王小明");
         return "articles/new-article";
     }
 
     @PostMapping("/new")
     public String createNewArticle(@Valid ArticleDTO articleDTO, BindingResult bindingResult) {
-        log.debug("article: {}", articleDTO);
-        return "articles/new-article";
+        if (bindingResult.hasErrors()) {
+            log.warn("Article binding error: {}", bindingResult);
+            return "articles/new-article";
+        }
+
+        var article = articleService.save(modelMapper.map(articleDTO, Article.class));
+        return "redirect:/articles/" + article.getId();
     }
 
     @PostMapping(value = "/upload-image", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -105,18 +110,9 @@ public class ArticleController implements HandlerExceptionResolver {
             .orElseThrow();
     }
 
-	@Override
-	public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler,
-        Exception ex) {
-        if (ex instanceof MaxUploadSizeExceededException) {
-            try {
-                response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-                response.getWriter().write("{ \"error\": \"fileTooLarge\" }");
-                return new ModelAndView();
-            } catch(IOException e){
-                e.printStackTrace();
-            }
-        }
-		return null;
-	}
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    @ResponseBody
+    public ResponseEntity<Map<String, String>> uploadImageSizeExceeded() {
+        return ResponseEntity.badRequest().body(Map.of("error", "fileTooLarge"));
+    }
 }
