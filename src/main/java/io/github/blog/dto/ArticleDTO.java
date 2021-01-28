@@ -1,6 +1,6 @@
 package io.github.blog.dto;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import javax.validation.constraints.NotBlank;
 
@@ -20,7 +20,7 @@ public class ArticleDTO {
     @NotBlank
     private String content;
 
-    private String coverPicture;
-    private LocalDate createDate;
-    private LocalDate updateDate;
+    private String coverPictureUrl;
+    private LocalDateTime createDate;
+    private LocalDateTime updateDate;
 }

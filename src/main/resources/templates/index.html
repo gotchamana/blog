@@ -17,8 +17,8 @@
                 <div class="offset-md-2 col-md-8 offset-1 col-10">
                     <div class="card">
                         <div class="view overlay">
-                            <img class="card-img-top" alt="Cover image" th:src="|data:image/*;base64,*{coverPicture}|"
-                                th:if="*{coverPicture} != null">
+                            <img class="card-img-top" alt="Cover image" th:src="*{coverPictureUrl}"
+                                th:if="*{coverPictureUrl} != null">
                             <a th:href="|@{/articles}/*{id}|">
                                 <div class="mask rgba-white-slight"></div>
                             </a>
@@ -28,9 +28,10 @@
                             <h3 class="card-title text-capitalize" th:text="*{title}"></h3>
                             <h6 class="text-muted" style="text-overflow: ellipsis; overflow: hidden;">
                                 <span class="article-metadata" th:text="|#{article.author}：*{author}|"></span>
-                                <span class="article-metadata" th:text="|#{article.create-date}：*{createDate}|"></span>
+                                <span class="article-metadata"
+                                    th:text="|#{article.create-date}：*{#temporals.format(createDate, 'yyyy/MM/dd')}|"></span>
                                 <span class="article-metadata" th:if="not *{createDate.equals(updateDate)}"
-                                    th:text="|#{article.update-date}：*{updateDate}|"></span>
+                                    th:text="|#{article.update-date}：*{#temporals.format(updateDate, 'yyyy/MM/dd')}|"></span>
                             </h6>
                             <hr>
                             <p class="card-text" th:text="*{#strings.abbreviate(content, 300)}"></p>

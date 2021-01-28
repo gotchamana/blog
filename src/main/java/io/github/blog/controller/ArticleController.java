@@ -23,8 +23,7 @@ import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBui
 import io.github.blog.dto.*;
 import io.github.blog.entity.*;
 import io.github.blog.module.ArticleModule;
-import io.github.blog.repository.ImageRepository;
-import io.github.blog.service.ArticleService;
+import io.github.blog.service.*;
 import lombok.extern.log4j.Log4j2;
 
 @Controller
@@ -36,7 +35,7 @@ public class ArticleController {
     private ArticleService articleService;
 
     @Autowired
-    private ImageRepository imageRepository;
+    private ImageService imageService;
 
     private ModelMapper modelMapper;
 
@@ -79,11 +78,15 @@ public class ArticleController {
         return "redirect:/articles/" + article.getId();
     }
 
+    @GetMapping(value = "/download-cover-picture/{id}", produces = "image/*")
+    @ResponseBody
+    public Object downloadCoverPicture(@PathVariable Long id) {
+        return articleService.findById(id).orElseThrow().getCoverPicture();
+    }
+
     @PostMapping(value = "/upload-image", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<Object> uploadImage(@Valid ImageDTO imageDTO, BindingResult bindingResult)
-        throws IOException {
-
+    public ResponseEntity<Object> uploadImage(@Valid ImageDTO imageDTO, BindingResult bindingResult) throws IOException {
         if (bindingResult.hasErrors())
             return ResponseEntity.badRequest().body(Map.of("error", "noFileGiven"));
 
@@ -93,7 +96,7 @@ public class ArticleController {
 
         var image = new Image();
         image.setImage(uploadImage.getBytes());
-        image = imageRepository.save(image);
+        image = imageService.save(image);
 
         var path = MvcUriComponentsBuilder.fromMethodCall(on(ArticleController.class).downloadImage(image.getId()))
             .encode()
@@ -105,7 +108,7 @@ public class ArticleController {
     @GetMapping(value = "/download-image/{id}", produces = "image/*")
     @ResponseBody
     public Object downloadImage(@PathVariable String id) {
-        return imageRepository.findById(id)
+        return imageService.findById(id)
             .map(Image::getImage)
             .orElseThrow();
     }

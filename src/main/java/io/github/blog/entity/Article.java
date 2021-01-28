@@ -1,8 +1,10 @@
 package io.github.blog.entity;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
 
 import org.hibernate.annotations.*;
 
@@ -26,15 +28,24 @@ public class Article {
     @Lob
     private String content;
 
-    @Lob
-    @Basic(fetch = FetchType.LAZY)
+    @Transient
     private byte[] coverPicture;
 
     @Column(nullable = false)
     @CreationTimestamp
-    private LocalDate createDate;
+    private LocalDateTime createDate;
 
     @Column(nullable = false)
     @UpdateTimestamp
-    private LocalDate updateDate;
+    private LocalDateTime updateDate;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "article_id")
+    private List<Image> images;
+
+    @PostLoad
+    public void loadCoverPicture() {
+        if (!images.isEmpty())
+            coverPicture = images.get(0).getImage();
+    }
 }

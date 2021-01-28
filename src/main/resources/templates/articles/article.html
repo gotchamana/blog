@@ -22,16 +22,14 @@
             <div class="row" th:object="${article}">
                 <div class="offset-md-2 col-md-8 offset-1 col-10">
                     <div class="card">
-                        <img class="card-img-top" alt="Cover image" th:src="|data:image/*;base64,*{coverPicture}|"
-                            th:if="*{coverPicture} != null">
-
                         <div class="card-body p-5">
                             <h1 class="card-title font-weight-bold text-capitalize" th:text="*{title}"></h1>
                             <h5 class="text-muted" style="text-overflow: ellipsis; overflow: hidden;">
                                 <span class="article-metadata" th:text="|#{article.author}：*{author}|"></span>
-                                <span class="article-metadata" th:text="|#{article.create-date}：*{createDate}|"></span>
+                                <span class="article-metadata"
+                                    th:text="|#{article.create-date}：*{#temporals.format(createDate, 'yyyy/MM/dd')}|"></span>
                                 <span class="article-metadata" th:if="not *{createDate.equals(updateDate)}"
-                                    th:text="|#{article.update-date}：*{updateDate}|"></span>
+                                    th:text="|#{article.update-date}：*{#temporals.format(updateDate, 'yyyy/MM/dd')}|"></span>
                             </h5>
                             <hr class="mt-4 mb-4">
                             <p class="article-text" th:utext="*{content}"></p>
