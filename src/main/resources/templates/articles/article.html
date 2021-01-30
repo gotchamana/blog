@@ -28,7 +28,8 @@
                                 <span class="article-metadata" th:text="|#{article.author}：*{author}|"></span>
                                 <span class="article-metadata"
                                     th:text="|#{article.create-date}：*{#temporals.format(createDate, 'yyyy/MM/dd')}|"></span>
-                                <span class="article-metadata" th:if="not *{createDate.equals(updateDate)}"
+                                <span class="article-metadata"
+                                    th:if="not *{createDate.toLocalDate().equals(updateDate.toLocalDate())}"
                                     th:text="|#{article.update-date}：*{#temporals.format(updateDate, 'yyyy/MM/dd')}|"></span>
                             </h5>
                             <hr class="mt-4 mb-4">
