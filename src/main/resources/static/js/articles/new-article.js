@@ -20,7 +20,8 @@ function enableEasyMDE() {
                 body: plainText
             })
             .then(res => res.text())
-            .then(html => preview.innerHTML = html);
+            .then(html => preview.innerHTML = html)
+            .then(() => preview.querySelectorAll("pre code").forEach(hljs.highlightBlock));
 
             return "載入中...";
         },
