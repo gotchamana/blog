@@ -5,17 +5,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function enableEasyMDE() {
     new EasyMDE({
-        autosave: {
-            enabled: false,
-            uniqueId: "1"
-        },
         hideIcons: ["fullscreen", "guide"],
         indentWithTabs: false,
         insertTexts: {
-            image: ["![", "](https://)"]
+            image: ["![](https://", ")"]
         },
         minHeight: "40vh",
         placeholder: "",
+        previewRender: (plainText, preview) => {
+            if (!plainText.trim()) return "";
+
+            fetch(RENDER_MARKDOWN_URL, {
+                method: "POST",
+                body: plainText
+            })
+            .then(res => res.text())
+            .then(html => preview.innerHTML = html);
+
+            return "載入中...";
+        },
         uploadImage: true,
         imageUploadEndpoint: UPLOAD_IMAGE_URL,
         imageTexts: {

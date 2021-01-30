@@ -9,6 +9,7 @@ import javax.validation.Valid;
 
 import org.commonmark.ext.gfm.tables.TablesExtension;
 import org.commonmark.parser.Parser;
+import org.commonmark.renderer.Renderer;
 import org.commonmark.renderer.html.HtmlRenderer;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,9 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class ArticleController {
     
+    private static final Parser MARKDOWN_PARSER;
+    private static final Renderer HTML_RENDERER;
+
     @Autowired
     private ArticleService articleService;
 
@@ -38,6 +42,12 @@ public class ArticleController {
 
     private ModelMapper modelMapper;
 
+    static {
+        var extensions = List.of(TablesExtension.create());
+        MARKDOWN_PARSER = Parser.builder().extensions(extensions).build();
+        HTML_RENDERER = HtmlRenderer.builder().extensions(extensions).escapeHtml(true).build();
+    }
+
     public ArticleController() {
         modelMapper = new ModelMapper();
         configureModelMapper();
@@ -45,11 +55,7 @@ public class ArticleController {
 
     private void configureModelMapper() {
         modelMapper.getConfiguration().setSkipNullEnabled(true);
-
-        var extensions = List.of(TablesExtension.create());
-        var parser = Parser.builder().extensions(extensions).build();
-        var renderer = HtmlRenderer.builder().extensions(extensions).escapeHtml(true).build();
-        modelMapper.registerModule(new ArticleModule(parser, renderer));
+        modelMapper.registerModule(new ArticleModule(MARKDOWN_PARSER, HTML_RENDERER));
 	}
 
     @GetMapping("/{id}")
@@ -58,6 +64,13 @@ public class ArticleController {
         model.addAttribute("article", article);
 
         return "articles/article";
+    }
+
+    @PostMapping(value = "/render-markdown", produces = MediaType.TEXT_PLAIN_VALUE)
+    @ResponseBody
+    public String renderMarkdown(@RequestBody String markdown) {
+        log.debug("Upload markdown: {}", markdown);
+        return HTML_RENDERER.render(MARKDOWN_PARSER.parse(markdown));
     }
 
     @GetMapping("/new")
