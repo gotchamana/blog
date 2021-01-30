@@ -59,7 +59,7 @@ public class ArticleController {
 	}
 
     @GetMapping("/{id}")
-    public String getArticle(@PathVariable long id, Model model) {
+    public String getArticle(@PathVariable Long id, Model model) {
         var article = modelMapper.map(articleService.findById(id).orElseThrow(), ArticleDTO.class);
         model.addAttribute("article", article);
 
@@ -82,7 +82,7 @@ public class ArticleController {
     @PostMapping("/new")
     public String createNewArticle(@Valid ArticleDTO articleDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            log.warn("Article binding error: {}", bindingResult);
+            log.warn("Article binding error: {}", bindingResult.getAllErrors());
             return "articles/new-article";
         }
 
@@ -92,7 +92,7 @@ public class ArticleController {
 
     @GetMapping("/edit/{id}")
     public String editArticleForm(@PathVariable Long id, Model model) {
-        var article = new ModelMapper().map(articleService.findById(id).orElseThrow(), ArticleDTO.class);
+        var article = modelMapper.map(articleService.findById(id).orElseThrow(), ArticleDTO.class, "update");
         model.addAttribute("articleDTO", article);
         return "articles/edit-article";
     }
