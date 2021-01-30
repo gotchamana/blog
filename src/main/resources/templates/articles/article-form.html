@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org" th:fragment="form">
+
+<head>
+    <th:block th:insert="common-head :: meta"></th:block>
+
+    <th:block th:insert="common-head :: link"></th:block>
+    <link rel="stylesheet" th:href="@{/webjars/easymde/easymde.min.css}">
+    <link rel="stylesheet" th:href="@{/css/articles/article-form.css}">
+
+    <th:block th:insert="common-head :: script"></th:block>
+    <script th:src="@{/webjars/easymde/easymde.min.js}"></script>
+    <script th:inline="javascript">
+        const UPLOAD_IMAGE_URL = /*[[@{/articles/upload-image}]]*/ "";
+        const RENDER_MARKDOWN_URL = /*[[@{/articles/render-markdown}]]*/ "";
+    </script>
+    <script th:src="@{/js/articles/article-form.js}"></script>
+
+    <title th:text="${title}"></title>
+</head>
+
+<body>
+    <div th:replace="navbar"></div>
+
+    <div class="container-fluid pb-3">
+        <div class="row">
+            <div class="offset-md-2 col-md-8 offset-1 col-10">
+                <div class="card">
+                    <div class="card-body">
+                        <form method="POST" enctype="multipart/form-data" th:object="${articleDTO}">
+                            <div class="md-form">
+                                <input class="form-control" type="text" disabled th:value="*{author}">
+                                <input type="hidden" th:field="*{author}" th:errorclass="is-invalid">
+                                <label for="author">作者</label>
+                                <div class="invalid-feedback" th:errors="*{author}"></div>
+                            </div>
+
+                            <div class="md-form">
+                                <input class="form-control font-weight-bold" type="text" autocomplete="off" th:field="*{title}"
+                                    th:errorclass="is-invalid">
+                                <label for="title">標題</label>
+                                <div class="invalid-feedback" th:errors="*{title}"></div>
+                            </div>
+
+                            <textarea th:field="*{content}" th:errorclass="is-invalid"></textarea>
+                            <span id="contentError" class="d-none" th:errors="*{content}"></span>
+                            <button class="btn btn-success btn-md waves-effect" type="submit">發布</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

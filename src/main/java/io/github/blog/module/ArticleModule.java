@@ -43,9 +43,12 @@ public class ArticleModule implements org.modelmapper.Module {
                 .map(markdown -> renderer.render(parser.parse(markdown)))
                 .orElse(null);
 
-		var typeMap = modelMapper.createTypeMap(Article.class, ArticleDTO.class);
+        var typeMap = modelMapper.createTypeMap(Article.class, ArticleDTO.class);
+
         typeMap.addMappings(mapper ->
             mapper.using(toCoverPictureUrl).map(Article::getCoverPicture, ArticleDTO::setCoverPictureUrl));
-        typeMap.addMappings(mapper -> mapper.using(toHtml).map(Article::getContent , ArticleDTO::setContent));
+
+        typeMap.addMappings(mapper ->
+            mapper.using(toHtml).map(Article::getContent , ArticleDTO::setContent));
     }
 }

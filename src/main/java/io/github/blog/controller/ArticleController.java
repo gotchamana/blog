@@ -90,9 +90,32 @@ public class ArticleController {
         return "redirect:/articles/" + article.getId();
     }
 
+    @GetMapping("/edit/{id}")
+    public String editArticleForm(@PathVariable Long id, Model model) {
+        var article = new ModelMapper().map(articleService.findById(id).orElseThrow(), ArticleDTO.class);
+        model.addAttribute("articleDTO", article);
+        return "articles/edit-article";
+    }
+
+    @PostMapping("/edit/{id}")
+    public String editArticle(@PathVariable Long id, @Valid ArticleDTO articleDTO, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            log.warn("Article binding error: {}", bindingResult.getAllErrors());
+            return "articles/edit-article";
+        }
+
+        var article = articleService.findById(id).orElseThrow();
+        modelMapper.map(articleDTO, article);
+        articleService.save(article);
+
+        return "redirect:/articles/" + id;
+    }
+
     @PostMapping(value = "/upload-image", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<Object> uploadImage(@Valid ImageDTO imageDTO, BindingResult bindingResult) throws IOException {
+    public ResponseEntity<Object> uploadImage(@Valid ImageDTO imageDTO, BindingResult bindingResult)
+        throws IOException {
+
         if (bindingResult.hasErrors())
             return ResponseEntity.badRequest().body(Map.of("error", "noFileGiven"));
 
