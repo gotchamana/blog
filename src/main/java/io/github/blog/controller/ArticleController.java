@@ -48,7 +48,7 @@ public class ArticleController {
 
         var extensions = List.of(TablesExtension.create());
         var parser = Parser.builder().extensions(extensions).build();
-        var renderer = HtmlRenderer.builder().extensions(extensions).build();
+        var renderer = HtmlRenderer.builder().extensions(extensions).escapeHtml(true).build();
         modelMapper.registerModule(new ArticleModule(parser, renderer));
 	}
 
