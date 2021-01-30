@@ -10,6 +10,10 @@ public interface ImageRepository extends CrudRepository<Image, String> {
 
     @Modifying
     @Transactional
-    @Query(value = "DELETE FROM image WHERE article_id IS NULL", nativeQuery = true)
+    @Query(value =
+        "DELETE FROM image " +
+        "WHERE id IN (" +
+            "(SELECT id FROM image) MINUS (SELECT image_id FROM article_image)" +
+        ")", nativeQuery = true)
     void deleteOrthanImages();
 }

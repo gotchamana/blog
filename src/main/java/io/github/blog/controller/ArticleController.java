@@ -1,6 +1,6 @@
 package io.github.blog.controller;
 
-import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.on;
+import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.*;
 
 import java.io.IOException;
 import java.util.*;
@@ -18,7 +18,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
-import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
 import io.github.blog.dto.*;
 import io.github.blog.entity.*;
@@ -78,12 +77,6 @@ public class ArticleController {
         return "redirect:/articles/" + article.getId();
     }
 
-    @GetMapping(value = "/download-cover-picture/{id}", produces = "image/*")
-    @ResponseBody
-    public Object downloadCoverPicture(@PathVariable Long id) {
-        return articleService.findById(id).orElseThrow().getCoverPicture();
-    }
-
     @PostMapping(value = "/upload-image", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Object> uploadImage(@Valid ImageDTO imageDTO, BindingResult bindingResult) throws IOException {
@@ -95,10 +88,10 @@ public class ArticleController {
             uploadImage.getSize(), uploadImage.getContentType());
 
         var image = new Image();
-        image.setImage(uploadImage.getBytes());
+        image.setContent(uploadImage.getBytes());
         image = imageService.save(image);
 
-        var path = MvcUriComponentsBuilder.fromMethodCall(on(ArticleController.class).downloadImage(image.getId()))
+        var path = fromMethodCall(on(ArticleController.class).downloadImage(image.getId()))
             .encode()
             .build()
             .getPath();
@@ -109,7 +102,7 @@ public class ArticleController {
     @ResponseBody
     public Object downloadImage(@PathVariable String id) {
         return imageService.findById(id)
-            .map(Image::getImage)
+            .map(Image::getContent)
             .orElseThrow();
     }
 

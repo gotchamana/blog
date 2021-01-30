@@ -18,5 +18,5 @@ public class Image {
     @Column(nullable = false)
     @Lob
     @Basic(fetch = FetchType.LAZY)
-    private byte[] image;
+    private byte[] content;
 }

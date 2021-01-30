@@ -4,10 +4,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.*;
-import javax.persistence.CascadeType;
 
 import org.hibernate.annotations.*;
 
+import io.github.blog.util.ImageCollector;
 import lombok.Data;
 
 @Data
@@ -29,7 +29,7 @@ public class Article {
     private String content;
 
     @Transient
-    private byte[] coverPicture;
+    private Image coverPicture;
 
     @Column(nullable = false)
     @CreationTimestamp
@@ -39,13 +39,13 @@ public class Article {
     @UpdateTimestamp
     private LocalDateTime updateDate;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "article_id")
+    @ManyToMany
+    @JoinTable(name = "article_image", inverseJoinColumns = @JoinColumn(name = "image_id"))
     private List<Image> images;
 
     @PostLoad
     public void loadCoverPicture() {
         if (!images.isEmpty())
-            coverPicture = images.get(0).getImage();
+            coverPicture = new ImageCollector(content).getImages().get(0);
     }
 }
