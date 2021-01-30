@@ -5,11 +5,9 @@
         <th:block th:insert="common-head :: meta"></th:block>
 
         <th:block th:insert="common-head :: link"></th:block>
-        <link rel="stylesheet" th:href="@{/webjars/highlight.js/styles/stackoverflow-light.css}">
         <link rel="stylesheet" th:href="@{/css/articles/article.css}">
 
         <th:block th:insert="common-head :: script"></th:block>
-        <script th:src="@{/webjars/highlight.js/highlight.pack.js}"></script>
         <script th:src="@{/js/articles/article.js}"></script>
 
         <title th:text="${article.title}"></title>

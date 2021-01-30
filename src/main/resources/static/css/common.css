@@ -164,3 +164,7 @@ body {
     width: 61.1px;
     height: 61.1px;
 }
+
+.hljs {
+    padding: 16px 30px 20px;
+}
