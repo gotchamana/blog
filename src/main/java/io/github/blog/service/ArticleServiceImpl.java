@@ -11,7 +11,7 @@ import java.util.concurrent.CompletableFuture;
 
 import javax.imageio.ImageIO;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.Service;
 
 import io.github.blog.entity.*;
@@ -22,6 +22,12 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 @Service
 public class ArticleServiceImpl implements ArticleService {
+
+    @Value("${article.cover-picture.min-width}")
+    private int coverPictureMinWidth;
+
+    @Value("${article.cover-picture.min-height}")
+    private int coverPictureMinHeight;
 
     @Autowired
     private ArticleRepository articleRepository;
@@ -51,7 +57,8 @@ public class ArticleServiceImpl implements ArticleService {
         CompletableFuture.runAsync(() -> 
             imageUrls.stream()
                 .dropWhile(url -> getImage(url)
-                    .filter(image -> image.getWidth() >= 200 && image.getHeight() >= 100)
+                    .filter(image ->
+                        image.getWidth() >= coverPictureMinWidth && image.getHeight() >= coverPictureMinHeight)
                     .isEmpty()
                 )
                 .findFirst()
