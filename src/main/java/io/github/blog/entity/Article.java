@@ -4,14 +4,14 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
 
 import org.hibernate.annotations.*;
 
-import io.github.blog.util.ImageCollector;
 import lombok.Data;
 
 @Data
-@javax.persistence.Entity
+@Entity
 public class Article {
     
     @Id
@@ -28,8 +28,8 @@ public class Article {
     @Lob
     private String content;
 
-    @Transient
-    private Image coverPicture;
+    @Column(nullable = false, length = 2048)
+    private String coverPictureUrl = "";
 
     @Column(nullable = false)
     @CreationTimestamp
@@ -42,10 +42,4 @@ public class Article {
     @ManyToMany
     @JoinTable(name = "article_image", inverseJoinColumns = @JoinColumn(name = "image_id"))
     private List<Image> images;
-
-    @PostLoad
-    public void loadCoverPicture() {
-        if (!images.isEmpty())
-            coverPicture = new ImageCollector(content).getImages().get(0);
-    }
 }

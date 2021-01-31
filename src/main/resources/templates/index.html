@@ -18,7 +18,7 @@
                     <div class="card">
                         <div class="view overlay">
                             <img class="card-img-top" alt="Cover image" th:src="*{coverPictureUrl}"
-                                th:if="*{coverPictureUrl} != null">
+                                th:if="*{not #strings.isEmpty(coverPictureUrl)}">
                             <a th:href="|@{/articles}/*{id}|">
                                 <div class="mask rgba-white-slight"></div>
                             </a>
