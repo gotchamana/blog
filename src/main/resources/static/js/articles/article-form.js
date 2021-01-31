@@ -21,7 +21,10 @@ function enableEasyMDE() {
             })
             .then(res => res.text())
             .then(html => preview.innerHTML = html)
-            .then(() => preview.querySelectorAll("pre code").forEach(hljs.highlightBlock));
+            .then(() => {
+                preview.querySelectorAll("pre code").forEach(hljs.highlightBlock);
+                preview.querySelectorAll("img").forEach(img => img.classList.add("img-fluid"));
+            });
 
             return "載入中...";
         },
