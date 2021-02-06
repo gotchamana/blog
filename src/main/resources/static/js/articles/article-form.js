@@ -1,6 +1,57 @@
+class Tag {
+
+    /**
+     * 
+     * @param {string} text 
+     * @param {boolean} closeable 
+     */
+    constructor(text = "", closeable = false) {
+        this.text = text;
+        this.closeable = closeable;
+        this.element = this._createTagElement(text, closeable);
+    }
+
+    /**
+     * @private
+     */
+    _createTagElement(text, closeable) {
+        let element = document.createElement("div");
+        element.classList.add("chip", "waves-effect");
+        element.textContent = text;
+
+        if (closeable) {
+            let icon = this._createCloseIcon();
+            icon.addEventListener("click", () => element.remove());
+            element.appendChild(icon);
+        }
+
+        return element;
+    }
+
+    /**
+     * @private
+     */
+    _createCloseIcon() {
+        let icon = document.createElement("i");
+        icon.classList.add("close", "fas", "fa-times");
+        return icon;
+    }
+
+    /**
+     * @param {(t: Tag) => void} action
+     */
+    set onClose(action) {
+        let icon = this.element.querySelector("i");
+
+        if (icon)
+            icon.addEventListener("click", () => action(this));
+    }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     enableEasyMDE();
     copyTextareaValidationError();
+    enableAutoComplete();
 });
 
 function enableEasyMDE() {
@@ -52,4 +103,62 @@ function enableEasyMDE() {
 function copyTextareaValidationError() {
     let errorContainer = document.getElementById("contentError");
     document.querySelector(".content-error").textContent = errorContainer ? errorContainer.textContent : "";
+}
+
+function enableAutoComplete() {
+    new autoComplete({
+        data: {
+            src: ["Apple", "book", "dog", "Cat"]
+        },
+        selector: "#tags",
+        highlight: true,
+        onSelection: feedback => {
+            document.getElementById("tags").value = feedback.selection.value;
+        }
+    });
+}
+
+function preventFormSubmit(e) {
+    if (e.key === "Enter") e.preventDefault();
+}
+
+function addTagButtonOnClick() {
+    addTag(getInputTagText());
+    clearInputTagText();
+}
+
+function getInputTagText() {
+    return document.getElementById("tags").value.trim();
+}
+
+function addTag(text) {
+    if (!text) return;
+
+    let container = getTagContainer();
+    if (container.containsTagText(text)) return;
+
+    let input = document.createElement("input");
+    input.type = "hidden";
+    input.name = "tags";
+    input.value = text;
+
+    let tag = new Tag(text, true);
+    tag.onClose = () => input.remove();
+
+    container.append(tag.element, input);
+}
+
+function getTagContainer() {
+    let container = document.getElementById("tagContainer");
+
+    container.containsTagText = text =>
+        Array.from(container.querySelectorAll("input[type=hidden]"))
+            .map(e => e.value)
+            .includes(text);
+
+    return container;
+}
+
+function clearInputTagText() {
+    document.getElementById("tags").value = "";
 }
