@@ -44,10 +44,10 @@ public class ArticleServiceImpl implements ArticleService {
     public Article save(Article article) {
         var imageUrls = new ImageUrlCollector(article.getContent()).getImageUrls();
 
-        setArticleCoverPictureUrl(article, imageUrls);
         article.setImages(getUsedUploadImages(imageUrls));
-
         article = articleRepository.save(article);
+        setArticleCoverPictureUrl(article, imageUrls);
+
         imageRepository.deleteOrthanImages();
 
         return article;
