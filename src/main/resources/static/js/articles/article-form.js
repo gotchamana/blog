@@ -161,5 +161,7 @@ function getTagContainer() {
 }
 
 function clearInputTagText() {
-    document.getElementById("tags").value = "";
+    let input = document.getElementById("tags");
+    input.value = "";
+    input.dispatchEvent(new Event("blur"));
 }
