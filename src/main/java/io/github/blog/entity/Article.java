@@ -1,7 +1,7 @@
 package io.github.blog.entity;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.*;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
@@ -42,4 +42,8 @@ public class Article {
     @ManyToMany
     @JoinTable(name = "article_image", inverseJoinColumns = @JoinColumn(name = "image_id"))
     private List<Image> images;
+
+    @ManyToMany
+    @JoinTable(name = "article_tag", inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    private Set<Tag> tags;
 }

@@ -56,3 +56,7 @@ INSERT INTO image(id, content) VALUES('8cbbd308-8d4d-47a9-a83a-f938adaf2b9f', FI
 INSERT INTO article_image(article_id, image_id) VALUES(1, '10265a61-fde6-4007-b745-55af11b648c5');
 INSERT INTO article_image(article_id, image_id) VALUES(2, '8cbbd308-8d4d-47a9-a83a-f938adaf2b9f');
 INSERT INTO article_image(article_id, image_id) VALUES(3, 'd91032c9-a7b0-4a2c-9ee5-73061fdf3e80');
+
+INSERT INTO tag(id, text) VALUES(1, 'Foo');
+INSERT INTO tag(id, text) VALUES(2, 'Bar');
+INSERT INTO tag(id, text) VALUES(3, 'Baz');

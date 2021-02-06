@@ -108,7 +108,8 @@ function copyTextareaValidationError() {
 function enableAutoComplete() {
     new autoComplete({
         data: {
-            src: ["Apple", "book", "dog", "Cat"]
+            src: fetch(GET_ALL_TAGS_URL).then(res => res.json()),
+            cache: false
         },
         selector: "#tags",
         highlight: true,
