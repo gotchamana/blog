@@ -13,7 +13,7 @@ public interface ImageRepository extends CrudRepository<Image, String> {
     @Query(value =
         "DELETE FROM image " +
         "WHERE id IN (" +
-            "(SELECT id FROM image) MINUS (SELECT image_id FROM article_image)" +
+            "(SELECT id FROM image) EXCEPT (SELECT image_id FROM article_image)" +
         ")", nativeQuery = true)
     void deleteOrthanImages();
 }
