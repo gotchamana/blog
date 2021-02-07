@@ -42,6 +42,9 @@ public class ArticleModule implements org.modelmapper.Module {
         typeMap.addMappings(mapper ->
             mapper.using(toHtml).map(Article::getContent , ArticleDTO::setContent));
         typeMap.addMappings(mapper -> mapper.using(toTagTexts).map(Article::getTags, ArticleDTO::setTags));
+
+        typeMap = modelMapper.createTypeMap(Article.class, ArticleDTO.class, "update");
+        typeMap.addMappings(mapper -> mapper.using(toTagTexts).map(Article::getTags, ArticleDTO::setTags));
     }
 
 	private void configDTOToEntity(ModelMapper modelMapper) {

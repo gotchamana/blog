@@ -49,10 +49,15 @@ class Tag {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+    addExistTags();
     enableEasyMDE();
     copyTextareaValidationError();
     enableAutoComplete();
 });
+
+function addExistTags() {
+    EXIST_TAGS.forEach(addTag);
+}
 
 function enableEasyMDE() {
     new EasyMDE({
