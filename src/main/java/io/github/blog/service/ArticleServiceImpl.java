@@ -35,6 +35,9 @@ public class ArticleServiceImpl implements ArticleService {
     @Autowired
     private ImageRepository imageRepository;
 
+    @Autowired
+    private TagRepository tagRepository;
+
     @Override
     public Optional<Article> findById(Long id) {
         return articleRepository.findById(id);
@@ -42,13 +45,17 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public Article save(Article article) {
-        var imageUrls = new ImageUrlCollector(article.getContent()).getImageUrls();
+        var tags = tagRepository.saveAllIfNotExists(article.getTags());
+        article.setTags(tags);
 
+        var imageUrls = new ImageUrlCollector(article.getContent()).getImageUrls();
         article.setImages(getUsedUploadImages(imageUrls));
+
         article = articleRepository.save(article);
         setArticleCoverPictureUrl(article, imageUrls);
 
         imageRepository.deleteOrthanImages();
+        tagRepository.deleteOrthanTags();
 
         return article;
     }

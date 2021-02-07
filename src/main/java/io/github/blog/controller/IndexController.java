@@ -75,9 +75,10 @@ public class IndexController {
 	}
 
 	@GetMapping("/")
-    public String index(Model model, @PageableDefault(sort = "createDate", direction=Direction.DESC) Pageable pageable) {
-        var articles = articleRepository.findAll(pageable)
-            .map(article -> modelMapper.map(article, ArticleDTO.class));
+    public String index(Model model,
+        @PageableDefault(sort = "createDate", direction = Direction.DESC) Pageable pageable) {
+
+        var articles = articleRepository.findAll(pageable).map(article -> modelMapper.map(article, ArticleDTO.class));
 
         model.addAttribute("articles", articles);
         return "index";

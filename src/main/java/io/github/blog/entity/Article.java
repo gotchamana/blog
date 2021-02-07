@@ -43,7 +43,7 @@ public class Article {
     @JoinTable(name = "article_image", inverseJoinColumns = @JoinColumn(name = "image_id"))
     private List<Image> images;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "article_tag", inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> tags;
 }
