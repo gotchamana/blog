@@ -119,7 +119,8 @@ function enableAutoComplete() {
         selector: "#tags",
         highlight: true,
         onSelection: feedback => {
-            document.getElementById("tags").value = feedback.selection.value;
+            addTag(feedback.selection.value);
+            clearInputTagText();
         }
     });
 }
@@ -168,5 +169,6 @@ function getTagContainer() {
 function clearInputTagText() {
     let input = document.getElementById("tags");
     input.value = "";
-    input.dispatchEvent(new Event("blur"));
+    input.blur();
+    input.parentElement.querySelector("label").classList.remove("active");
 }
