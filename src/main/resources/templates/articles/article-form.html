@@ -18,6 +18,13 @@
         const UPLOAD_IMAGE_URL = /*[[@{/articles/upload-image}]]*/ "";
         const RENDER_MARKDOWN_URL = /*[[@{/articles/render-markdown}]]*/ "";
         const EXIST_TAGS = /*[[${articleDTO.tags}]]*/ [];
+
+        const EASY_MDE_LOADING_TEXT = /*[[#{easy-mde.preview-loading}]]*/ "";
+        const EASY_MDE_SB_INIT_TEXT = /*[[#{easy-mde.image-texts.sb-init}]]*/ "";
+        const EASY_MDE_SB_ON_DRAG_ENTER_TEXT = /*[[#{easy-mde.image-texts.sb-on-drag-enter}]]*/ "";
+        const EASY_MDE_SB_ON_DROP_TEXT = /*[[#{easy-mde.image-texts.sb-on-drop}]]*/ "";
+        const EASY_MDE_SB_PROGRESS_TEXT = /*[[#{easy-mde.image-texts.sb-progress}]]*/ "";
+        const EASY_MDE_SB_ON_UPLOADED_TEXT = /*[[#{easy-mde.image-texts.sb-on-uploaded}]]*/ "";
     </script>
     <script th:src="@{/js/articles/article-form.js}"></script>
 
@@ -36,24 +43,24 @@
                             <div class="md-form">
                                 <input class="form-control" type="text" disabled th:value="*{author}">
                                 <input type="hidden" th:field="*{author}" th:errorclass="is-invalid">
-                                <label for="author">作者</label>
+                                <label for="author" th:text="#{article-form.author}"></label>
                                 <div class="invalid-feedback" th:errors="*{author}"></div>
                             </div>
 
                             <div class="md-form">
                                 <input class="form-control font-weight-bold" type="text" autocomplete="off" th:field="*{title}"
                                     th:errorclass="is-invalid">
-                                <label for="title">標題</label>
+                                <label for="title" th:text="#{article-form.title}"></label>
                                 <div class="invalid-feedback" th:errors="*{title}"></div>
                             </div>
 
                             <div class="md-form input-group">
                                 <input id="tags" class="form-control p-0" type="text" autocomplete="off"
                                     onkeypress="preventFormSubmit(event)">
-                                <label for="tags">標籤</label>
+                                <label for="tags" th:text="#{article-form.tag}"></label>
                                 <div class="input-group-append">
                                     <button class="btn btn-md btn-primary m-0 px-3" type="button"
-                                        onclick="addTagButtonOnClick()">新增</button>
+                                        onclick="addTagButtonOnClick()" th:text="#{article-form.add-tag}"></button>
                                 </div>
                             </div>
 
@@ -61,7 +68,8 @@
 
                             <textarea th:field="*{content}" th:errorclass="is-invalid"></textarea>
                             <span id="contentError" class="d-none" th:errors="*{content}"></span>
-                            <button class="btn btn-success btn-md waves-effect" type="submit">發布</button>
+                            <button class="btn btn-success btn-md waves-effect" type="submit"
+                                th:text="#{article-form.post-article}"></button>
                         </form>
                     </div>
                 </div>

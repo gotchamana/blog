@@ -82,16 +82,16 @@ function enableEasyMDE() {
                 preview.querySelectorAll("img").forEach(img => img.classList.add("img-fluid"));
             });
 
-            return "載入中...";
+            return EASY_MDE_LOADING_TEXT;
         },
         uploadImage: true,
         imageUploadEndpoint: UPLOAD_IMAGE_URL,
         imageTexts: {
-            sbInit: "圖片可以透過拖曳或剪貼簿上傳",
-            sbOnDragEnter: "放開以上傳圖片",
-            sbOnDrop: "上傳#images_names#",
-            sbProgress: "上傳中#progress#%",
-            sbOnUploaded: "上傳成功"
+            sbInit: EASY_MDE_SB_INIT_TEXT ,
+            sbOnDragEnter: EASY_MDE_SB_ON_DRAG_ENTER_TEXT ,
+            sbOnDrop: EASY_MDE_SB_ON_DROP_TEXT ,
+            sbProgress: EASY_MDE_SB_PROGRESS_TEXT ,
+            sbOnUploaded: EASY_MDE_SB_ON_UPLOADED_TEXT 
         },
         renderingConfig: {
             codeSyntaxHighlighting: true
