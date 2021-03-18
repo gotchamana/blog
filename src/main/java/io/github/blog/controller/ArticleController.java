@@ -1,5 +1,6 @@
 package io.github.blog.controller;
 
+import static io.github.blog.config.ModelMapperConfiguration.TypeMapName.*;
 import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.*;
 
 import java.io.IOException;
@@ -13,6 +14,8 @@ import org.commonmark.renderer.Renderer;
 import org.commonmark.renderer.html.HtmlRenderer;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,7 +25,6 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import io.github.blog.dto.*;
 import io.github.blog.entity.*;
-import io.github.blog.module.ArticleModule;
 import io.github.blog.service.*;
 import lombok.extern.log4j.Log4j2;
 
@@ -40,6 +42,7 @@ public class ArticleController {
     @Autowired
     private ImageService imageService;
 
+    @Autowired
     private ModelMapper modelMapper;
 
     static {
@@ -48,19 +51,10 @@ public class ArticleController {
         HTML_RENDERER = HtmlRenderer.builder().extensions(extensions).escapeHtml(true).build();
     }
 
-    public ArticleController() {
-        modelMapper = new ModelMapper();
-        configureModelMapper();
-    }
-
-    private void configureModelMapper() {
-        modelMapper.getConfiguration().setSkipNullEnabled(true);
-        modelMapper.registerModule(new ArticleModule(MARKDOWN_PARSER, HTML_RENDERER));
-	}
-
     @GetMapping("/{id}")
     public String getArticle(@PathVariable Long id, Model model) {
-        var article = modelMapper.map(articleService.findById(id).orElseThrow(), ArticleDTO.class);
+        var article = modelMapper.map(articleService.findById(id).orElseThrow(), ArticleDTO.class,
+            ARTICLE_TO_DTO_WITH_HTML_RENDER.getName());
         model.addAttribute("article", article);
 
         return "articles/article";
@@ -92,7 +86,8 @@ public class ArticleController {
 
     @GetMapping("/edit/{id}")
     public String editArticleForm(@PathVariable Long id, Model model) {
-        var article = modelMapper.map(articleService.findById(id).orElseThrow(), ArticleDTO.class, "update");
+        var article = modelMapper.map(articleService.findById(id).orElseThrow(), ArticleDTO.class,
+            ARTICLE_TO_DTO_WITH_NO_RENDER.getName());
         model.addAttribute("articleDTO", article);
         return "articles/edit-article";
     }
@@ -146,5 +141,14 @@ public class ArticleController {
     @ResponseBody
     public ResponseEntity<Map<String, String>> uploadImageSizeExceeded() {
         return ResponseEntity.badRequest().body(Map.of("error", "fileTooLarge"));
+    }
+
+    @GetMapping("/search")
+    public String search(@RequestParam("q") String query, @PageableDefault Pageable pageable, Model model) {
+        var articles = articleService.search(query, pageable)
+            .map(article -> modelMapper.map(article, ArticleDTO.class, ARTICLE_TO_DTO_WITH_RAW_TEXT_RENDER.getName()));
+        model.addAttribute("articles", articles);
+
+        return "articles/search-result";
     }
 }

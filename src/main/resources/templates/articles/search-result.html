@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <th:block th:insert="common-head :: meta"></th:block>
+        <th:block th:insert="common-head :: link"></th:block>
+        <th:block th:insert="common-head :: script"></th:block>
+
+        <title th:text="''"></title>
+    </head>
+
+    <body>
+        <div th:replace="navbar"></div>
+
+        <div class="container-fluid pb-3">
+            <div class="row mb-5" th:each="article : ${articles}" th:object="${article}">
+                <div class="offset-md-2 col-md-8 offset-1 col-10">
+                    <div class="card">
+                        <div class="card-body">
+                            <h3 class="card-title text-capitalize" th:text="*{title}"></h3>
+                            <h6 class="text-muted" style="text-overflow: ellipsis; overflow: hidden;">
+                                <span class="article-metadata" th:text="|#{article.author}：*{author}|"></span>
+                                <span class="article-metadata"
+                                    th:text="|#{article.create-date}：*{#temporals.format(createDate, 'yyyy/MM/dd')}|"></span>
+                                <span class="article-metadata"
+                                    th:if="not *{createDate.toLocalDate().equals(updateDate.toLocalDate())}"
+                                    th:text="|#{article.update-date}：*{#temporals.format(updateDate, 'yyyy/MM/dd')}|"></span>
+                            </h6>
+                            <hr>
+                            <p class="card-text" th:text="*{#strings.abbreviate(content, 300)}"></p>
+                            <div class="d-flex justify-content-end">
+                                <a class="h6" th:href="|@{/articles}/*{id}|">
+                                    [[#{home.article.read-more}]]
+                                    <i class="fas fa-angle-double-right" aria-hidden="true"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <nav>
+                <ul class="pagination pg-teal justify-content-center" sd:pagination-split="5" sd:pagination="full"></ul>
+            </nav>
+        </div>
+    </body>
+</html>

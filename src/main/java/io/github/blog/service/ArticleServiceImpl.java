@@ -12,11 +12,13 @@ import java.util.concurrent.CompletableFuture;
 import javax.imageio.ImageIO;
 
 import org.springframework.beans.factory.annotation.*;
+import org.springframework.data.domain.*;
+import org.springframework.data.domain.ExampleMatcher.StringMatcher;
 import org.springframework.stereotype.Service;
 
 import io.github.blog.entity.*;
 import io.github.blog.repository.*;
-import io.github.blog.util.ImageUrlCollector;
+import io.github.blog.util.*;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
@@ -41,6 +43,21 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public Optional<Article> findById(Long id) {
         return articleRepository.findById(id);
+    }
+
+    @Override
+    public Page<Article> search(String query, Pageable pageable) {
+        var probe = new Article();
+        probe.setTitle(query);
+        probe.setContent(query);
+        probe.setAuthor(query);
+
+        var matcher = ExampleMatcher.matchingAny()
+            .withIgnoreCase()
+            .withIgnorePaths("coverPictureUrl")
+            .withStringMatcher(StringMatcher.CONTAINING);
+
+        return articleRepository.findAll(Example.of(probe, matcher), pageable);
     }
 
     @Override
