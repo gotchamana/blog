@@ -4,6 +4,7 @@ import static io.github.blog.config.ModelMapperConfiguration.TypeMapName.*;
 import static java.util.stream.Collectors.toSet;
 
 import java.util.*;
+import java.util.function.Function;
 
 import org.commonmark.ext.gfm.tables.TablesExtension;
 import org.commonmark.node.*;
@@ -46,20 +47,24 @@ public class ArticleModule implements org.modelmapper.Module {
                 .map(tags -> tags.stream().map(Tag::getText).collect(toSet()))
                 .orElse(Set.of());
 
+        Function<Converter<String, String>, ExpressionMap<Article, ArticleDTO>> mapContent = converter ->
+            mapper -> mapper.using(converter).map(Article::getContent , ArticleDTO::setContent);
+
+        ExpressionMap<Article, ArticleDTO> mapTags = mapper ->
+            mapper.using(toTagTexts).map(Article::getTags, ArticleDTO::setTags);
+
         var typeMap = modelMapper.createTypeMap(Article.class, ArticleDTO.class,
             ARTICLE_TO_DTO_WITH_RAW_TEXT_RENDER.getName());
-        typeMap.addMappings(mapper ->
-            mapper.using(toRawText).map(Article::getContent , ArticleDTO::setContent));
-        typeMap.addMappings(mapper -> mapper.using(toTagTexts).map(Article::getTags, ArticleDTO::setTags));
+        typeMap.addMappings(mapContent.apply(toRawText));
+        typeMap.addMappings(mapTags);
 
         typeMap = modelMapper.createTypeMap(Article.class, ArticleDTO.class,
             ARTICLE_TO_DTO_WITH_HTML_RENDER.getName());
-        typeMap.addMappings(mapper ->
-            mapper.using(toHtml).map(Article::getContent , ArticleDTO::setContent));
-        typeMap.addMappings(mapper -> mapper.using(toTagTexts).map(Article::getTags, ArticleDTO::setTags));
+        typeMap.addMappings(mapContent.apply(toHtml));
+        typeMap.addMappings(mapTags);
 
         typeMap = modelMapper.createTypeMap(Article.class, ArticleDTO.class, ARTICLE_TO_DTO_WITH_NO_RENDER.getName());
-        typeMap.addMappings(mapper -> mapper.using(toTagTexts).map(Article::getTags, ArticleDTO::setTags));
+        typeMap.addMappings(mapTags);
     }
 
 	private void configDTOToEntity(ModelMapper modelMapper) {
