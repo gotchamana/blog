@@ -60,3 +60,9 @@ INSERT INTO article_image(article_id, image_id) VALUES(3, 'd91032c9-a7b0-4a2c-9e
 INSERT INTO tag(text) VALUES('Foo');
 INSERT INTO tag(text) VALUES('Bar');
 INSERT INTO tag(text) VALUES('Baz');
+
+INSERT INTO article_tag(article_id, tag_id) VALUES(1, 1);
+INSERT INTO article_tag(article_id, tag_id) VALUES(1, 2);
+INSERT INTO article_tag(article_id, tag_id) VALUES(1, 3);
+INSERT INTO article_tag(article_id, tag_id) VALUES(2, 2);
+INSERT INTO article_tag(article_id, tag_id) VALUES(3, 1);

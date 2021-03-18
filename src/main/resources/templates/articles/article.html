@@ -30,7 +30,8 @@
                                     th:if="not *{createDate.toLocalDate().equals(updateDate.toLocalDate())}"
                                     th:text="|#{article.update-date}：*{#temporals.format(updateDate, 'yyyy/MM/dd')}|"></span>
                             </h5>
-                            <hr class="mt-4 mb-4">
+                            <div class="chip mt-2 mb-0" th:each="tag : *{tags}" th:text="${tag}"></div>
+                            <hr class="mb-4">
                             <p class="article-text" th:utext="*{content}"></p>
                         </div>
                     </div>
