@@ -19,7 +19,7 @@
         <div class="container-fluid pb-3">
             <div class="row mb-3">
                 <div class="offset-md-2 col-md-8 offset-1 col-10 search-info" th:object="${searchInfo}"
-                    th:text="|搜尋項目：*{query}，共有*{totalAmount}筆結果|"></div>
+                    th:text="#{search-result.search-info(*{query}, *{totalAmount})}"></div>
             </div>
 
             <div class="row mb-5" th:each="article : ${articles}" th:object="${article}">
@@ -42,7 +42,7 @@
                 </div>
             </div>
 
-            <nav>
+            <nav th:if="${articles.totalPages > 1}">
                 <ul class="pagination pg-teal justify-content-center" sd:pagination-split="5" sd:pagination="full"></ul>
             </nav>
         </div>
