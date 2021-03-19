@@ -159,6 +159,38 @@
                     </excludes>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>com.github.blutorange</groupId>
+                <artifactId>closure-compiler-maven-plugin</artifactId>
+                <version>2.21.0</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                    <baseSourceDir>${project.basedir}/src/main/resources</baseSourceDir>
+                    <baseTargetDir>${project.build.outputDirectory}</baseTargetDir>
+                    <sourceDir>static</sourceDir>
+                    <targetDir>static</targetDir>
+                    <includes>js/**/*.js</includes>
+                    <closureLanguageOut>ECMASCRIPT_2015</closureLanguageOut>
+                    <closureCreateSourceMap>true</closureCreateSourceMap>
+                    <closureSourceMapLocationMappings>
+                        <closureSourceMapLocationMapping>
+                            <name>js</name>
+                            <value>/js</value>
+                        </closureSourceMapLocationMapping>
+                    </closureSourceMapLocationMappings>
+                    <skipMerge>true</skipMerge>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>minify</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>minify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
