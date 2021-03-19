@@ -144,7 +144,12 @@ public class ArticleController {
     }
 
     @GetMapping("/search")
-    public String search(@RequestParam("q") String query, @PageableDefault Pageable pageable, Model model) {
+    public String search(@RequestParam(value = "q", defaultValue = "") String query,
+        @PageableDefault Pageable pageable, @RequestHeader(value = "referer", defaultValue = "/") String referer,
+        Model model) {
+
+        if (query.isBlank()) return "redirect:" + referer;
+
         var articles = articleService.search(query, pageable)
             .map(article -> modelMapper.map(article, ArticleDTO.class, ARTICLE_TO_DTO_WITH_RAW_TEXT_RENDER.getName()));
         model.addAttribute("articles", articles);

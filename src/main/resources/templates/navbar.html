@@ -12,10 +12,11 @@
             </li>
         </ul>
 
-        <form class="form-inline" method="GET" th:action="@{/articles/search}">
+        <form class="form-inline" method="GET" onsubmit="onSearchFormSubmit.call(this, event)"
+            th:action="@{/articles/search}">
             <div class="md-form my-0 w-100">
-                <input class="form-control mr-sm-2" type="text" name="q" th:placeholder="#{navbar.search}"
-                    th:value="${param.q}">
+                <input class="form-control mr-sm-2" type="text" name="q" autocomplete="off"
+                    th:placeholder="#{navbar.search}" th:value="${param.q}">
             </div>
         </form>
     </div>
