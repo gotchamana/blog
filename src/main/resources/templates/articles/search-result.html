@@ -3,22 +3,31 @@
 <html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
     <head>
         <th:block th:insert="common-head :: meta"></th:block>
-        <th:block th:insert="common-head :: link"></th:block>
-        <th:block th:insert="common-head :: script"></th:block>
 
-        <title th:text="''"></title>
+        <th:block th:insert="common-head :: link"></th:block>
+        <link rel="stylesheet" th:href="@{/css/articles/search-result.css}">
+
+        <th:block th:insert="common-head :: script"></th:block>
+        <script th:src="@{/js/articles/search-result.js}"></script>
+
+        <title th:text="${searchInfo.query}"></title>
     </head>
 
     <body>
         <div th:replace="navbar"></div>
 
         <div class="container-fluid pb-3">
+            <div class="row mb-3">
+                <div class="offset-md-2 col-md-8 offset-1 col-10 search-info" th:object="${searchInfo}"
+                    th:text="|搜尋項目：*{query}，共有*{totalAmount}筆結果|"></div>
+            </div>
+
             <div class="row mb-5" th:each="article : ${articles}" th:object="${article}">
                 <div class="offset-md-2 col-md-8 offset-1 col-10">
-                    <div class="card">
+                    <div class="card" th:onclick="openInNewTab([[@{/articles/{id}(id=*{id})}]])" >
                         <div class="card-body">
                             <h3 class="card-title text-capitalize" th:text="*{title}"></h3>
-                            <h6 class="text-muted" style="text-overflow: ellipsis; overflow: hidden;">
+                            <h6 class="text-muted text-truncate">
                                 <span class="article-metadata" th:text="|#{article.author}：*{author}|"></span>
                                 <span class="article-metadata"
                                     th:text="|#{article.create-date}：*{#temporals.format(createDate, 'yyyy/MM/dd')}|"></span>
@@ -27,13 +36,7 @@
                                     th:text="|#{article.update-date}：*{#temporals.format(updateDate, 'yyyy/MM/dd')}|"></span>
                             </h6>
                             <hr>
-                            <p class="card-text" th:text="*{#strings.abbreviate(content, 300)}"></p>
-                            <div class="d-flex justify-content-end">
-                                <a class="h6" th:href="|@{/articles}/*{id}|">
-                                    [[#{home.article.read-more}]]
-                                    <i class="fas fa-angle-double-right" aria-hidden="true"></i>
-                                </a>
-                            </div>
+                            <p class="card-text" th:text="*{content}"></p>
                         </div>
                     </div>
                 </div>

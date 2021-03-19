@@ -149,6 +149,9 @@ public class ArticleController {
             .map(article -> modelMapper.map(article, ArticleDTO.class, ARTICLE_TO_DTO_WITH_RAW_TEXT_RENDER.getName()));
         model.addAttribute("articles", articles);
 
+        var searchInfo = Map.of("query", query, "totalAmount", articles.getTotalElements());
+        model.addAttribute("searchInfo", searchInfo);
+
         return "articles/search-result";
     }
 }
