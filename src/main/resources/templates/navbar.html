@@ -1,5 +1,8 @@
 <nav class="navbar navbar-expand-lg navbar-dark grey darken-2 sticky-top mb-3">
-    <a class="navbar-brand" th:href="@{/}" th:text="#{navbar.brand-text}"></a>
+    <a class="navbar-brand" th:href="@{/}">
+        <img class="d-inline-block align-top" alt="" width="30px" th:src="@{/image/brand-icon.png}">
+        [[#{navbar.brand-text}]]
+    </a>
 
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent">
         <div class="hamburger-icon"><span></span><span></span><span></span></div>
