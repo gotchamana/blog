@@ -8,7 +8,7 @@ import org.thymeleaf.dialect.springdata.SpringDataDialect;
 
 @SpringBootApplication
 @EnableJpaRepositories
-@PropertySource("classpath:config.properties")
+@PropertySource("classpath:config/config.properties")
 public class BlogApplication {
 
     public static void main(String[] args) {
